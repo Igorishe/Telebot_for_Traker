@@ -1,6 +1,6 @@
 import os
-import telebot
 
+import telebot
 from dotenv import load_dotenv
 
 from ex_API_requests import show_all, report_save

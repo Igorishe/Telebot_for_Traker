@@ -1,5 +1,4 @@
 import os
-import json
 
 import requests
 from dotenv import load_dotenv
@@ -41,7 +40,6 @@ def show_all(message, bot):
                 'Authorization': f'Bearer {jwt_token}',
             }
         )
-        print(reports.status_code)
         if reports.status_code == 200:
             result = reports.json()
             output = format_result(result)
@@ -65,14 +63,17 @@ def show_all(message, bot):
 def report_save(message, bot):
     """Post new report to Traker base"""
     text = message.text
-    # reports = parse_report(text)
+    reports = parse_report(text)
     author_id = message.from_user.id
     author_username = message.from_user.username
-    to_save = {
-        'author': author_id,
-        'author_name': author_username,
-        'text': text,
-    }
+    to_save = []
+    for report in reports:
+        obj_to_save = {
+            'author': author_id,
+            'author_name': author_username,
+            'text': report,
+        }
+        to_save.append(obj_to_save)
     try:
         request = requests.post(
             url='http://127.0.0.1:8000/api/v1/report/',
